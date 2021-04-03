@@ -11,7 +11,7 @@ class Pilha
 {
 private:
   int *pilha;
-  int  topo;
+  int topo;
   char item[tamanho];
 
 public:
@@ -19,12 +19,15 @@ public:
   Pilha(int e);
   bool cheia();
   bool vazia();
-  int desempilha();
   void empilha(int e);
-  void empilhaParenteses(char e);
+  int desempilha();
   int quantidade();
   void imprimir();
-  bool checarSintatica(char p[]);
+  // métodos para mostrar o que está dentro do privado:
+  int valTopo();
+  char valItem(int e);
+  // bool checarSintatica(char p[]);
+  // void empilhaParenteses(char e);
 };
 
 #endif
