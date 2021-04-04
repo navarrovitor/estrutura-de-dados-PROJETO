@@ -1,7 +1,8 @@
 #include "pilha.h"
 
 Pilha::Pilha()
-{}
+{
+}
 
 Pilha::Pilha(int c)
 {
@@ -36,7 +37,8 @@ void Pilha::empilha(int e)
   }
 }
 
-int Pilha::quantidade(){
+int Pilha::quantidade()
+{
   return (this->topo + 1);
 }
 
@@ -65,15 +67,19 @@ void Pilha::imprimir()
   };
 }
 
-char Pilha::retornaItem(int e){
-  return this->item[e];
+char Pilha::retornaItemdoTopo()
+{
+  return this->item[retornaTopo()];
 }
 
-int Pilha::retornaTopo(){
-  if(!vazia()) {
+int Pilha::retornaTopo()
+{
+  if (!vazia())
+  {
     return this->topo;
   }
-  else{
+  else
+  {
     return -1;
   }
 }

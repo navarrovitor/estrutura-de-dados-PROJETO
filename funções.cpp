@@ -1,40 +1,5 @@
 #include "pilha.h"
 
-bool corresponde(char a, char b)
-{
-  if (a == '{' && b == '}')
-    return 1;
-  else if (a == '[' && b == ']')
-    return 1;
-  else if (a == '(' && b == ')')
-    return 1;
-  else
-    return 0;
-}
-
-bool checarPont(string s, Pilha c)
-{
-  for (int i = 0; i < s.length(); i++)
-  {
-    if (s[i] == '(' || s[i] == '{' || s[i] == '[')
-    {
-      c.empilha(s[i]);
-    }
-    else if (c.vazia() || !corresponde(c.retornaTopo(), s[i]))
-    {
-      return false;
-    }
-    else
-    {
-      c.desempilha();
-    }
-  }
-  if (c.vazia())
-    return true;
-  else
-    return false;
-}
-
 int prioridade(char x)
 {
   if (x == '|')
@@ -49,8 +14,12 @@ int prioridade(char x)
     return 5;
   else if (x == '^')
     return 6;
+  else if (x == '(' || x == ')')
+    return 7;
+  else if (((int)x >= 48 && (int)x <= 57) || ((int)x >= 65 && (int)x <= 90) || ((int)x >= 97 && (int)x <= 122))
+    return 10;
   else
-    return -1;
+    return 0;
 }
 
 bool Operador(char c)
@@ -69,99 +38,93 @@ bool caracter(char c)
     return false;
 }
 
-string toPostfix(string infix)
+string toPostfix(string infixo)
 {
-  Pilha st;
-  char symbol;
-  string postfix = "";
-  int d = 0; //Lexical
-  int f = 0; //Sintaxe
+  Pilha pilha(1000);
+  char simbolo;
+  string posfixo = "";
+  int l = 0; //Lexical
+  int s = 0; //Sintaxe
 
-  for (int i = 0; i < infix.length(); ++i)
+  for (int i = 0; i < infixo.length(); ++i)
   {
-    if (prioridade(infix[i]) == 0)
+    if (prioridade(infixo[i]) == 0)
     {
-      d++;
+      l++;
       break;
     }
-    if (infix[i] == '(')
-      f++;
-    else if (infix[i] == ')')
-      f--;
-    else if (infix[i] == '{')
-      f++;
-    else if (infix[i] == '}')
-      f--;
-    else if (infix[i] == '[')
-      f++;
-    else if (infix[i] == ']')
-      f--;
+    if (infixo[i] == '(')
+      s++;
+    else if (infixo[i] == ')')
+      s--;
+    else if (infixo[i] == '{')
+      s++;
+    else if (infixo[i] == '}')
+      s--;
+    else if (infixo[i] == '[')
+      s++;
+    else if (infixo[i] == ']')
+      s--;
   }
-  for (int i = 1; i < infix.length(); i++)
+  for (int i = 1; i < infixo.length(); i++)
   {
-    int previous = prioridade(infix[i - 1]);
-    int present = prioridade(infix[i]);
-    if ((previous >= 1 && previous <= 6) && (present >= 1 && present <= 6))
+    int anterior = prioridade(infixo[i - 1]);
+    int atual = prioridade(infixo[i]);
+    if ((anterior >= 1 && anterior <= 6) && (atual >= 1 && atual <= 6))
     {
-      f++;
+      s++;
       break;
     }
-    if (previous == 10 && present == 10)
+    if (anterior == 10 && atual == 10)
     {
-      f++;
+      s++;
       break;
     }
   }
 
-  cout << "Valor de f: " << f << endl;
-  cout << "Valor de d: " << d << endl;
-
-  if (f == 0 && d == 0)
+  if (l == 0 && s == 0)
   {
-    for (int i = 0; i < infix.length(); ++i)
+    for (int i = 0; i < infixo.length(); ++i)
     {
-      symbol = infix[i];
-      if (prioridade(symbol) == 10)
+      simbolo = infixo[i];
+      if (caracter(simbolo))
       {
-        postfix += symbol;
+        posfixo += simbolo;
       }
-      else if (symbol == '(')
+      else if (simbolo == '(')
       {
-        st.empilha(symbol);
+        pilha.empilha(simbolo);
       }
-      else if (symbol == ')')
+      else if (simbolo == ')')
       {
-        while (st.retornaTopo() != '(')
+        while (char(pilha.retornaItemdoTopo()) != '(')
         {
-          int d = st.desempilha();
-          postfix += to_string(d);
+          posfixo += to_string(pilha.desempilha());
         }
-        st.desempilha();
+        pilha.desempilha();
       }
       else
       {
-        while (!st.vazia() && !(st.retornaTopo() == '(') && prioridade(symbol) <= prioridade(st.retornaTopo()))
+        while (!pilha.vazia() && !(char(pilha.retornaItemdoTopo()) == '(') && prioridade(simbolo) <= prioridade(char(pilha.retornaItemdoTopo())))
         {
-          int d = st.desempilha();
-          postfix += to_string(d);
-          st.empilha(symbol);
+          posfixo += to_string(pilha.desempilha());
+          pilha.empilha(simbolo);
         }
       }
     }
-    while (!st.vazia())
+    while (!pilha.vazia())
     {
-      int d = st.desempilha();
-      postfix += to_string(d);
+      posfixo += to_string(pilha.desempilha());
     }
   }
-  else if (d != 0)
+  else if (l != 0)
   {
-    postfix = "Erro Lexical!";
+    posfixo = "Erro Lexical!";
   }
-  else if (f != 0)
+  else if (s != 0)
   {
-    postfix = "Erro Sintático!";
+    posfixo = "Erro Sintático!";
   }
 
-  return postfix;
+  return posfixo;
 }

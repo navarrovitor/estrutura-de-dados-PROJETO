@@ -25,7 +25,7 @@ public:
   void imprimir();
   // métodos para mostrar o que está dentro do privado:
   int retornaTopo();
-  char retornaItem(int e);
+  char retornaItemdoTopo();
 };
 
 #endif
