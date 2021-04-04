@@ -24,10 +24,8 @@ public:
   int quantidade();
   void imprimir();
   // métodos para mostrar o que está dentro do privado:
-  int valTopo();
-  char valItem(int e);
-  // bool checarSintatica(char p[]);
-  // void empilhaParenteses(char e);
+  int retornaTopo();
+  char retornaItem(int e);
 };
 
 #endif

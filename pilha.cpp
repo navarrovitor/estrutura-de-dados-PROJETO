@@ -65,22 +65,15 @@ void Pilha::imprimir()
   };
 }
 
-char Pilha::valItem(int e){
+char Pilha::retornaItem(int e){
   return this->item[e];
 }
 
-int Pilha::valTopo(){
-  return this->topo;
+int Pilha::retornaTopo(){
+  if(!vazia()) {
+    return this->topo;
+  }
+  else{
+    return -1;
+  }
 }
-
-// void Pilha::empilhaParenteses(char e)
-// {
-//   if (cheia())
-//   {
-//     return;
-//   }
-//   else
-//   {
-//     this->item[++this->topo] = e;
-//   }
-// }
