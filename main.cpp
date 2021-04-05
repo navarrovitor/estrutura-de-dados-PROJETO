@@ -1,11 +1,12 @@
 #include "pilha.h"
-#include "funções.cpp"
+#include "func.h"
 
 int main()
 {
-  string infix;
-  cout << "entre com a expressão: " << endl;
-  cin >> infix;
-  cout << toPostfix(infix);
+  string infixo;
+  cout << "Entre com a expressão: ";
+  cin >> infixo;
+  cout << "A expressão fica: " << toPostfix(infixo) << endl;
+
   return 0;
 }

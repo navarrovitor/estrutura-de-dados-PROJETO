@@ -1,3 +1,6 @@
+#ifndef FUNC_H
+#define FUNC_H
+
 #include "pilha.h"
 
 int prioridade(char x)
@@ -38,7 +41,7 @@ bool caracter(char c)
     return false;
 }
 
-string toPostfix(string infixo)
+string toPostfix(string infixo) //Pega a String inicial e arruma ela
 {
   Pilha pilha(1000);
   char simbolo;
@@ -48,12 +51,12 @@ string toPostfix(string infixo)
 
   for (int i = 0; i < infixo.length(); ++i)
   {
-    if (prioridade(infixo[i]) == 0)
+    if (prioridade(infixo[i]) == -1) // Se for -1 significa que nada foi inserido
     {
       l++;
       break;
     }
-    if (infixo[i] == '(')
+    if (infixo[i] == '(') // Verifica os parenteses, caso estejam errados ele já da o erro direto
       s++;
     else if (infixo[i] == ')')
       s--;
@@ -68,9 +71,9 @@ string toPostfix(string infixo)
   }
   for (int i = 1; i < infixo.length(); i++)
   {
-    int anterior = prioridade(infixo[i - 1]);
+    int anterior = prioridade(infixo[i - 1]); //Ele trata o array a partir do anterior
     int atual = prioridade(infixo[i]);
-    if ((anterior >= 1 && anterior <= 6) && (atual >= 1 && atual <= 6))
+    if ((anterior >= 0 && anterior <= 6) && (atual >= 1 && atual <= 6)) //Se o anterior for maior do que 1 e menor do que 6
     {
       s++;
       break;
@@ -81,12 +84,12 @@ string toPostfix(string infixo)
       break;
     }
   }
-
-  if (l == 0 && s == 0)
+  // Aqui começa a modificar a pilha.
+  if (l == 0 && s == 0) // Caso n tenha nenhum erro ele faz o postfix
   {
     for (int i = 0; i < infixo.length(); ++i)
     {
-      simbolo = infixo[i];
+      simbolo = char(infixo[i]);
       if (caracter(simbolo))
       {
         posfixo += simbolo;
@@ -99,7 +102,7 @@ string toPostfix(string infixo)
       {
         while (char(pilha.retornaItemdoTopo()) != '(')
         {
-          posfixo += to_string(pilha.desempilha());
+          posfixo += char(pilha.desempilha());
         }
         pilha.desempilha();
       }
@@ -107,14 +110,15 @@ string toPostfix(string infixo)
       {
         while (!pilha.vazia() && !(char(pilha.retornaItemdoTopo()) == '(') && prioridade(simbolo) <= prioridade(char(pilha.retornaItemdoTopo())))
         {
-          posfixo += to_string(pilha.desempilha());
-          pilha.empilha(simbolo);
+          posfixo += char(pilha.desempilha());
         }
+        pilha.empilha(simbolo);
       }
     }
     while (!pilha.vazia())
     {
-      posfixo += to_string(pilha.desempilha());
+      posfixo += char(pilha.desempilha());
+      cout << "Posfixo fica: " << posfixo;
     }
   }
   else if (l != 0)
@@ -125,6 +129,7 @@ string toPostfix(string infixo)
   {
     posfixo = "Erro Sintático!";
   }
-
   return posfixo;
 }
+
+#endif
